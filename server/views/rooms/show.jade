@@ -14,3 +14,9 @@ block content
 		socket.on("exited", function(user){
 			console.log("User :"+user.name+" just left the room");
 		});
+
+		socket.emit('createstory',{storyname:"a tid story"});
+
+		socket.on("createdstory",function(story){
+			console.log("A story with name + " + story.name);
+		});
