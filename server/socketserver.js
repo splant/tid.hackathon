@@ -1,25 +1,28 @@
 var stories  = [];
 var currentRound = null;
+var currentRoundTimer = null;
 
 module.exports = {
 
     create : function(io){
 
-        function getRoomStatus() {
-            var room = {
-                people : [], 
-                stories: stories, 
-                currentRound: null 
-            };
-
+        function getPeople() {
+            var people = [];
             var clients = io.sockets.adapter.rooms["123"];
 
             for (var clientId in clients ) {
                 var socket = io.sockets.connected[clientId];//Do whatever you want with this
-                room.people.push({"name": socket.name, "color": socket.color});
+                people.push({"name": socket.name, "color": socket.color});
             }
+            return people;
+        }
 
-            return room;
+        function getRoomStatus() {
+            return {
+                people : getPeople(),
+                stories: stories, 
+                currentRound: null 
+            };
         };
 
         function endRound() {
@@ -69,7 +72,7 @@ module.exports = {
                 console.log('Started round');
                 socket.broadcast.emit('startedround', currentRound);
 
-                setTimeout(endRound, 10000); 
+                currentRoundTimer = setTimeout(endRound, 10000);
             });
 
             socket.on('vote', function(data) {
@@ -77,13 +80,22 @@ module.exports = {
                 console.log('Received vote from '+socket.name+': '+estimate);
                 if (currentRound) {
                     currentRound.votes[socket.name] = estimate;
-                    
+
                     socket.broadcast.emit('voted', {
                         name: socket.name,
                         estimate: estimate
                     });
+
+                    if(everyoneVoted()) {
+                        clearTimeout(currentRoundTimer);
+                        endRound();
+                    }
                 }
             })
+
+            function everyoneVoted() {
+                return getPeople().length == Object.keys(currentRound.votes).length;
+            }
 
         });
     }
