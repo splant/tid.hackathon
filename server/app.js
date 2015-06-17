@@ -41,12 +41,13 @@ io.on("connection", function(socket) {
 
     // send room status to sender
     socket.emit("roomstatus", getRoomStatus());
-
+    socket.broadcast.emit("joined", {name:socket.name,colour:socket.colour});
     console.log("Hello from "+data.name);
   });
 
   socket.on('disconnect', function() {
     console.log(socket.name + " disconnected");
+    socket.broadcast.emit("exited",{name:socket.name,colour:socket.colour});
   });
 });
 
