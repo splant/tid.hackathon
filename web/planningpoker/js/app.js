@@ -57,7 +57,7 @@ $(document).foundation();
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
     $scope.onVote = function(number){
-      alert("Congratulations!!! You voted for: " + number + "!?");
+      $("#room-updates").text("Congratulations!!! You voted for: " + number + "!?");
       socket.emit("vote", { estimate : number });
     }
   })
@@ -81,24 +81,25 @@ $(document).foundation();
     $scope.roundStartedClicked = function(){
       socket.emit("startround", { name : "A story!" }, function(error){
         if(error){
-          alert("Round error");
+          $("#room-updates").text("Round Error!")
         } else {
-          alert("Round started!");
+          $("#room-updates").text("Round Started!")
         }
       });
 
     }
 
     socket.on("endedround", function(roundResults){
-      alert("round ended: " + JSON.stringify(roundResults));
+      $("#room-updates").text("Round ended: " + JSON.stringify(roundResults));
+      $(".user-tile").css("border", "none")
 		});
 
     socket.on("voted", function(voteResult){
-      alert("vote recieved: " + JSON.stringify(voteResult));
+      $("#user-tile-" + voteResult.id).css("border", "3px solid black")
 		});
 
     socket.on("startedround", function(voteResult){
-      alert("Started round!");
+      $("#room-updates").text("Round Started!")
     });
   })
 
