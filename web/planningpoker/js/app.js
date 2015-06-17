@@ -3,7 +3,7 @@ $(document).foundation();
 
 (function(){
 
-  var socket = io.connect('http://127.0.0.1:3000/');
+  var socket = io.connect('http://SI3VWUK1UMU002.pre-prod.skyscanner.local:3000/');
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
   var colors = ["red", "blue", "green", "orange", "purple"];
