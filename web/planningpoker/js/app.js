@@ -31,8 +31,11 @@ $(document).foundation();
     socket.on('roomstatus', function(room){
       for (i = 0; i < room.people.length; i++) {
         $scope.users.push(room.people[i]);
+        $scope.$apply();
       }
-      console.log(room)});
+      console.log(room)
+    });
+
 		socket.on('joined',function(user){
 			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
 			console.log(user.colour);
