@@ -46,7 +46,7 @@ $(document).foundation();
       console.log("User "+user.name+" just left the room.");
       var users = $scope.users;
       for (i = 0; i < users.length; i++) {
-        if(users[i].name === user.name && users[i].color === user.color) {
+        if(users[i].name === user.name && users[i].id === user.id) {
           users.splice(i, 1)
           $scope.$apply();
         }
@@ -79,18 +79,27 @@ $(document).foundation();
 
   var roundController = app.controller("roundController", function($scope){
     $scope.roundStartedClicked = function(){
-      alert("Round started!");
-      socket.emit("startround", { name : "A story!" });
+      socket.emit("startround", { name : "A story!" }, function(error){
+        if(error){
+          alert("Round error");
+        } else {
+          alert("Round started!");
+        }
+      });
 
     }
 
     socket.on("endedround", function(roundResults){
-      alert("round ended: " + roundResults);
+      alert("round ended: " + JSON.stringify(roundResults));
 		});
-        
+
     socket.on("voted", function(voteResult){
-      alert("vote recieved: " + voteResult);
+      alert("vote recieved: " + JSON.stringify(voteResult));
 		});
+
+    socket.on("startedround", function(voteResult){
+      alert("Started round!");
+    });
   })
 
 

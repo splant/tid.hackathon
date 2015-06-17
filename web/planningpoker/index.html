@@ -42,7 +42,7 @@
     <div class="row" ng-controller="usersController">
 
       <div ng-repeat="user in users" class="small-6 medium-3 large-2 columns" ng-class="{'end':$last}">
-        <div class="panel radius {{user.color}}">
+        <div class="panel radius {{user.color}}" id="{{'user-tile-' + user.id}}">
           <div>
             <h4 class="white-text text-center">{{user.name}}</h4>
           </div>
