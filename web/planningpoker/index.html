@@ -17,7 +17,7 @@
     </div>
 
     <div class="row">
-      <div class="large-12 columns">
+      <div class="large-12 columns text-center">
         <h1>Planning Poker</h1>
 
         <h2>Room 1</h2>
@@ -26,12 +26,68 @@
 
     <div class="row" ng-controller="usersController">
 
-      <div ng-repeat="user in users" class="small-6 medium-3 large-2 columns">
-        <div class="panel" style="background-color: {{user.color}};">
-          <h4>{{user.name}}</h4>
+      <div ng-repeat="user in users" class="small-6 medium-3 large-2 columns" ng-class="{'end':$last}">
+        <div class="panel radius {{user.color}}">
+          <div>
+            <h4 class="white-text text-center">{{user.name}}</h4>
+          </div>
+
+          <div>
+            <h5 class="white-text text-center">8</h5>
+          </div>
         </div>
       </div>
-      
+
+    </div>
+
+    <div class="row">
+
+      <div class="small-12 medium-6 large-4 columns medium-centered">
+        <div class="panel">
+          <div class="row">
+            <div class="small-4 columns">
+              <a class="button expand">0</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">1/2</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">1</a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="small-4 columns">
+              <a class="button expand">2</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">3</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">5</a>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="small-4 columns">
+              <a class="button expand">8</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">13</a>
+            </div>
+
+            <div class="small-4 columns">
+              <a class="button expand">21</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
 

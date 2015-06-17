@@ -4,14 +4,14 @@ $(document).foundation();
 (function(){
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
-  var colors = ["Red", "Blue", "Green", "Orange", "Brown", "Pink", "Purple", "Yellow"];
+  var colors = ["red", "blue", "green", "orange", "purple"];
 
   var app = angular.module("planningPokerApp", [])
 
   var getRandomUser = function(){
     return {
       "name" : names[Math.floor(Math.random() * 5)],
-      "color" : colors[Math.floor(Math.random() * 8)],
+      "color" : colors[Math.floor(Math.random() * 5)],
     }
   }
 

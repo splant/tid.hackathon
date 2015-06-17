@@ -4,3 +4,27 @@ div#current-user {
   right: 10px;
   width: 150px;
 }
+
+div.green {
+  background-color: $emerald;
+}
+
+div.blue {
+  background-color: $peter-river;
+}
+
+div.purple {
+  background-color: $amethyst;
+}
+
+div.orange {
+  background-color: $pumpkin;
+}
+
+div.red {
+  background-color: $alizarin;
+}
+
+h4.white-text, h5.white-text {
+  color: #ffffff;
+}
