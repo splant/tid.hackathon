@@ -1,23 +1,35 @@
 var stories  = [];
-var room ={ stories: stories};
+var currentRound = null;
+var currentRoundTimer = null;
 
 module.exports = {
 
     create : function(io){
 
-        function getRoomStatus() {
-
-            room.people = [];
-
+        function getPeople() {
+            var people = [];
             var clients = io.sockets.adapter.rooms["123"];
 
             for (var clientId in clients ) {
                 var socket = io.sockets.connected[clientId];//Do whatever you want with this
-                room.people.push({"name": socket.name, "color": socket.color});
+                people.push({"name": socket.name, "color": socket.color});
             }
+            return people;
+        }
 
-            return room;
+        function getRoomStatus() {
+            return {
+                people : getPeople(),
+                stories: stories, 
+                currentRound: null 
+            };
         };
+
+        function endRound() {
+            console.log('ending round');
+            io.sockets.emit('endedround', currentRound);
+            currentRound = null;
+        }
 
         io.on("connection", function(socket) {
 
@@ -44,9 +56,47 @@ module.exports = {
             });
 
             socket.on('createstory', function(data){
-                stories.push({name: data.storyname});
-                socket.broadcast.emit("createdstory",{name: data.storyname});
+                stories.push({name: data.name});
+                socket.broadcast.emit("createdstory",{name: data.name});
             });
+
+            socket.on('startround', function(data) {
+                var story = data.name;
+                var startTime = new Date();
+
+                currentRound = {
+                    story: story,
+                    startTime: startTime,
+                    votes: {}
+                };
+                console.log('Started round');
+                socket.broadcast.emit('startedround', currentRound);
+
+                currentRoundTimer = setTimeout(endRound, 30000);
+            });
+
+            socket.on('vote', function(data) {
+                var estimate = data.estimate;
+                console.log('Received vote from '+socket.name+': '+estimate);
+                if (currentRound) {
+                    currentRound.votes[socket.name] = estimate;
+
+                    socket.broadcast.emit('voted', {
+                        name: socket.name,
+                        estimate: estimate
+                    });
+
+                    if(everyoneVoted()) {
+                        clearTimeout(currentRoundTimer);
+                        endRound();
+                    }
+                }
+            })
+
+            function everyoneVoted() {
+                return getPeople().length == Object.keys(currentRound.votes).length;
+            }
+
         });
     }
 }
