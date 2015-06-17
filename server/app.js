@@ -16,6 +16,10 @@ app.io = io;
 
 io.on("connection", function(socket) {
   console.log("A user connected");
+  socket.emit('welcome', {name: 'a random name'});
+  socket.on('hello', function(data) {
+    console.log("Hello from "+data.from);
+  });
 
   socket.on('disconnect', function() {
     console.log("A user disconnected");
