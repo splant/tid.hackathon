@@ -8,6 +8,7 @@ var socketIo = require('socket.io');
 
 var routes = require('./routes/index');
 var rooms = require('./routes/rooms');
+var stories  = [];
 
 var app = express();
 
@@ -15,12 +16,13 @@ var io = socketIo();
 app.io = io;
 
 function getRoomStatus() {
-  var room = [];
+  var room ={ people : [] , stories: stories};
+
   var clients = io.sockets.adapter.rooms["123"];
 
   for (var clientId in clients ) {
     var socket = io.sockets.connected[clientId];//Do whatever you want with this
-    room.push({"name": socket.name, "colour": socket.colour});
+    room.people.push({"name": socket.name, "colour": socket.colour});
   }
 
   return room;
@@ -48,6 +50,11 @@ io.on("connection", function(socket) {
   socket.on('disconnect', function() {
     console.log(socket.name + " disconnected");
     socket.broadcast.emit("exited",{name:socket.name,colour:socket.colour});
+  });
+
+  socket.on('createstory', function(data){
+    stories.push({name: data.storyname});
+    socket.broadcast.emit("createdstory",{name: data.storyname});
   });
 });
 
