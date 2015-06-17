@@ -24,6 +24,7 @@
         <h1>Planning Poker</h1>
 
         <h2>Room 1</h2>
+        <h3 id="room-updates"></h3>
       </div>
     </div>
 
@@ -50,7 +51,7 @@
     <div class="row" ng-controller="usersController">
 
       <div ng-repeat="user in users" class="small-6 medium-3 large-2 columns" ng-class="{'end':$last}">
-        <div class="panel radius {{user.color}}" id="{{'user-tile-' + user.id}}">
+        <div class="panel radius user-tile {{user.color}}" id="{{'user-tile-' + user.id}}">
           <div>
             <h4 class="white-text text-center">{{user.name}}</h4>
           </div>
