@@ -24,9 +24,9 @@ $(document).foundation();
     $scope.stories.addStory = function(data) {
       socket.emit("createstory", {name: data}, function(err){
         if(err){
-          alert("Story error");
+          $("#room-updates").text("Story creation error!")
         } else {
-          alert("Story created!");
+          $("#room-updates").text("Story: " + data + " was created!")
         }
       });
     }
