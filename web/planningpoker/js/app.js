@@ -36,8 +36,10 @@ $(document).foundation();
     });
 
 		socket.on('joined',function(user){
-			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
-			console.log(user.colour);
+			console.log("User "+user.name+" just joined the room with colour "+ user.color);
+			console.log(user.color);
+      $scope.users.push(user);
+      $scope.$apply();
 		});
 
   })
