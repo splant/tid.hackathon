@@ -91,7 +91,7 @@ module.exports = {
                     console.log("Could not start round - Round in progress");
                     error(true);
                 } else {
-                    console.log('Started round');
+                    console.log('Started round for story:'+ data.name);
 
                     var story = data.name;
                     var startTime = new Date();
