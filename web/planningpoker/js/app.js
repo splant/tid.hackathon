@@ -56,16 +56,23 @@ $(document).foundation();
   })
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
-
     $scope.onVote = function(number){
-
+      alert("Congratulations!!! You voted for: " + number + "!?");
     }
   })
 
   var votingWidget = app.directive("votingWidget", function(){
 
     return {
-      "templateUrl" : "../templates/votingWidget.html"
+      scope : {
+        onButtonClicked : "&"
+      },
+      link : function(scope, element, attrs, controller){
+        scope.buttonClicked = function (num) {
+          scope.onButtonClicked()(num);
+       }
+      },
+      templateUrl : "../templates/votingWidget.html"
     };
   })
 

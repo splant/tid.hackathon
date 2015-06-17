@@ -10,7 +10,7 @@
     <script src="bower_components/foundation/js/foundation.min.js"></script>
     <script src="js/angular/angular.min.js"></script>
     <script src="js/socketio/socket.io.js"></script>
-    
+
     <script src="js/app.js"></script>
   </head>
   <body ng-app="planningPokerApp" ng-controller="everythingController">
@@ -42,8 +42,9 @@
 
     </div>
 
-    <div voting-widget></div>
-
+    <div ng-controller="votingWidgetController">
+      <div on-button-clicked="onVote" voting-widget></div>
+    </div>
 
   </body>
 </html>
