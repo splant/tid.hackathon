@@ -20,7 +20,7 @@ $(document).foundation();
 
   var usersController = app.controller("usersController", function($scope, $http){
 
-    $http.post('/someUrl', {msg:'hello word!'})
+    /* $http.post('/someUrl', {msg:'hello word!'})
          .success(function(data, status, headers, config) {
            // this callback will be called asynchronously
            // when the response is available
@@ -30,7 +30,7 @@ $(document).foundation();
            // or server returns response with an error status.
            //alert(data);
          });
-
+         */
 
     $scope.users = [{
       "id" : "1",
@@ -43,6 +43,14 @@ $(document).foundation();
     }]
 
     $scope.users.push(getRandomUser());
+  })
+
+  var votingWidget = app.directive("voting-widget", function(){
+
+    return {
+      "template" : "<h1>Test</h1>"
+      // "templateUrl" : "../templates/votingWidget.html"
+    };
   })
 
 })();
