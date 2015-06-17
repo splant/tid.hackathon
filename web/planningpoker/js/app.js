@@ -28,6 +28,16 @@ $(document).foundation();
     $scope.users.push(newUser);
     socket.emit("join", newUser);
 
+    socket.on('roomstatus', function(room){
+      for (i = 0; i < room.people.length; i++) {
+        $scope.users.push(room.people[i]);
+      }
+      console.log(room)});
+		socket.on('joined',function(user){
+			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
+			console.log(user.colour);
+		});
+
   })
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
