@@ -42,6 +42,17 @@ $(document).foundation();
       $scope.$apply();
 		});
 
+    socket.on("exited", function(user){
+      console.log("User "+user.name+" just left the room.");
+      var users = $scope.users;
+      for (i = 0; i < users.length; i++) {
+        if(users[i].name === user.name && users[i].color === user.color) {
+          users.splice(i, 1)
+          $scope.$apply();
+        }
+      }
+		});
+
   })
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
