@@ -3,6 +3,7 @@ $(document).foundation();
 
 (function(){
 
+  // var socket = io.connect('http://localhost:3000/');
   var socket = io.connect('http://SI3VWUK1UMU002.pre-prod.skyscanner.local:3000/');
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
@@ -17,7 +18,18 @@ $(document).foundation();
     }
   }
 
-  var everythingController = app.controller("everythingController", function(){
+  var everythingController = app.controller("everythingController", function($scope, $http){
+    $scope.stories = [];
+
+    $scope.stories.addStory = function(data) {
+      socket.emit("createstory", {name: data}, function(err){
+        //if error just do not add to list
+      });
+    }
+
+    socket.on('createdstory', function(){
+
+    });
   })
 
   var usersController = app.controller("usersController", function($scope, $http){
@@ -56,6 +68,7 @@ $(document).foundation();
   })
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
+
     $scope.onVote = function(number){
       $("#room-updates").text("Congratulations!!! You voted for: " + number + "!?");
       socket.emit("vote", { estimate : number });
@@ -71,7 +84,7 @@ $(document).foundation();
       link : function(scope, element, attrs, controller){
         scope.buttonClicked = function (num) {
           scope.onButtonClicked()(num);
-       }
+        }
       },
       templateUrl : "../templates/votingWidget.html"
     };
