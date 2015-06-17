@@ -5,7 +5,12 @@ block content
 
 	script.
 		socket = io();
-		socket.emit('hello', {from: "Dan"});
-		socket.on('welcome', function(data) {
-			alert(data.name);	
+		socket.emit('join', {name: "Dan", colour: "blue"});
+		socket.on('roomstatus', function(room){console.log(room)});
+		socket.on('joined',function(user){
+			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
+			console.log(user.colour);
+		});
+		socket.on("exited", function(user){
+			console.log("User :"+user.name+" just left the room");
 		});
