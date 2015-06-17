@@ -18,6 +18,14 @@ $(document).foundation();
     }
   }
 
+  var roundService = app.factory('round', function() {
+    var service = {
+      currentRound: null
+    };
+
+    return service;
+  })
+
   var everythingController = app.controller("everythingController", function($scope, $http){
     $scope.stories = [];
 
@@ -36,7 +44,8 @@ $(document).foundation();
     });
   })
 
-  var usersController = app.controller("usersController", function($scope, $http){
+  var usersController = app.controller("usersController", 
+    ['$scope', '$http', 'round', function($scope, $http, round){
 
     $scope.users = []
 
@@ -48,7 +57,13 @@ $(document).foundation();
         $scope.users.push(room.people[i]);
         $scope.$apply();
       }
+      round.currentRound = room.currentRound;
+      if (round.currentRound != null) {
+        var startTime = round.currentRound.startTime;
+        round.currentRound.startTime = new Date(startTime);
+      }
       console.log(room)
+      $scope.$apply();
     });
 
 		socket.on('joined',function(user){
@@ -69,7 +84,7 @@ $(document).foundation();
       }
 		});
 
-  })
+  }])
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
 
@@ -94,13 +109,66 @@ $(document).foundation();
     };
   })
 
-  var roundController = app.controller("roundController", function($scope){
+  var countdownWidget = app.directive("countdownWidget", ['$interval', function($interval) {
+    
+    function link(scope, element, attrs) {
+
+      function updateTimer() {
+        var now = new Date();
+        var difference = now - scope.start;
+        var timeRemaining = Math.round((30000 - difference)/1000);
+        
+        var countdownString = '0:';
+
+        if (timeRemaining < 10) {
+          countdownString += '0';
+        }
+
+        countdownString += timeRemaining;
+
+        element.text(countdownString);
+      }
+
+      element.on('$destroy', function() {
+        $interval.cancel(timeout);
+      });
+
+      timeout = $interval(function() {
+        updateTimer();
+      }, 1000);
+
+      updateTimer();
+    }
+
+    return {
+      scope: {
+        start: '='
+      },
+      link: link
+    };
+  }])
+
+  var roundController = app.controller("roundController", 
+    ['$scope', 'round', function($scope, round){
+
+    $scope.round = round;
+
+    $scope.isRoundActive = function() {
+      return $scope.round.currentRound != null;
+    }
+
     $scope.roundStartedClicked = function(data){
       socket.emit("startround", { name : data }, function(error){
         if(error){
           $("#room-updates").text("Round Error!")
         } else {
           $("#room-updates").text("Round Started for story " + data)
+          $scope.round.currentRound = {
+            story: data,
+            startTime: new Date(),
+            votes: {}
+          };
+          $scope.$apply();
         }
       });
 
@@ -109,16 +177,21 @@ $(document).foundation();
     socket.on("endedround", function(roundResults){
       $("#room-updates").text("Round ended: " + JSON.stringify(roundResults));
       $(".user-tile").css("border", "none")
+      $scope.round.currentRound = null;
+      $scope.$apply();
 		});
 
     socket.on("voted", function(voteResult){
       $("#user-tile-" + voteResult.id).css("border", "3px solid black")
 		});
 
-    socket.on("startedround", function(voteResult){
+    socket.on("startedround", function(round){
       $("#room-updates").text("Round Started!")
+      round.startTime = new Date(round.startTime);
+      $scope.round.currentRound = round;
+      $scope.$apply();
     });
-  })
+  }])
 
 
 })();
