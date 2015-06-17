@@ -3,7 +3,7 @@ $(document).foundation();
 
 (function(){
 
-  // var socket = io.connect('http://localhost:3000/');
+  //var socket = io.connect('http://localhost:3000/');
   var socket = io.connect('http://SI3VWUK1UMU002.pre-prod.skyscanner.local:3000/');
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
@@ -23,7 +23,11 @@ $(document).foundation();
 
     $scope.stories.addStory = function(data) {
       socket.emit("createstory", {name: data}, function(err){
-        //if error just do not add to list
+        if(err){
+          alert("Story error");
+        } else {
+          alert("Story created!");
+        }
       });
     }
 
@@ -91,12 +95,12 @@ $(document).foundation();
   })
 
   var roundController = app.controller("roundController", function($scope){
-    $scope.roundStartedClicked = function(){
-      socket.emit("startround", { name : "A story!" }, function(error){
+    $scope.roundStartedClicked = function(data){
+      socket.emit("startround", { name : data }, function(error){
         if(error){
           $("#room-updates").text("Round Error!")
         } else {
-          $("#room-updates").text("Round Started!")
+          $("#room-updates").text("Round Started for story " + data)
         }
       });
 
