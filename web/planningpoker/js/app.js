@@ -3,9 +3,7 @@ $(document).foundation();
 
 (function(){
 
-  var socket = io.connect('http://127.0.0.1:3000/');
-
-  socket.emit("join", { name : "Jack", color: "blue" });
+  var socket = io.connect('http://SI3VWUK1UMU002.pre-prod.skyscanner.local:3000/');
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
   var colors = ["red", "blue", "green", "orange", "purple"];
@@ -24,29 +22,25 @@ $(document).foundation();
 
   var usersController = app.controller("usersController", function($scope, $http){
 
-    /* $http.post('/someUrl', {msg:'hello word!'})
-         .success(function(data, status, headers, config) {
-           // this callback will be called asynchronously
-           // when the response is available
-         })
-         .error(function(data, status, headers, config) {
-           // called asynchronously if an error occurs
-           // or server returns response with an error status.
-           //alert(data);
-         });
-         */
+    $scope.users = []
 
-    $scope.users = [{
-      "id" : "1",
-      "name" : "Bob",
-      "color" : "green"
-    },{
-      "id" : "2",
-      "name" : "Mary",
-      "color" : "orange"
-    }]
+    var newUser = getRandomUser();
+    $scope.users.push(newUser);
+    socket.emit("join", newUser);
 
-    $scope.users.push(getRandomUser());
+    socket.on('roomstatus', function(room){
+      for (i = 0; i < room.people.length; i++) {
+        $scope.users.push(room.people[i]);
+        $scope.$apply();
+      }
+      console.log(room)
+    });
+
+		socket.on('joined',function(user){
+			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
+			console.log(user.colour);
+		});
+
   })
 
   var votingWidgetController = app.controller("votingWidgetController", function($scope){

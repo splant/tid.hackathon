@@ -3,20 +3,42 @@ extends ../layout
 block content
 	h1 Oh, hi there
 
+	table
+		thead
+			tr
+				td Event
+				td Data
+		tbody#event-data
+
+
+
 	script.
-		socket = io();
+		function outputData(name, data) {
+			var row = document.createElement('tr');
+			var nameCell = document.createElement('td');
+			var dataCell = document.createElement('td');
+
+			nameCell.innerHTML = name;
+			dataCell.innerHTML = JSON.stringify(data);
+
+			row.appendChild(nameCell);
+			row.appendChild(dataCell);
+
+			document.getElementById("event-data").appendChild(row);
+		}
+
+		socket = io.connect('http://localhost:3000');
 		socket.emit('join', {name: "Dan", colour: "blue"});
-		socket.on('roomstatus', function(room){console.log(room)});
+		socket.on('roomstatus', function(room){outputData('roomstatus', room)});
 		socket.on('joined',function(user){
-			console.log("User "+user.name+" just joined the room with colour "+ user.colour);
-			console.log(user.colour);
+			outputData('joined', user);
 		});
 		socket.on("exited", function(user){
-			console.log("User :"+user.name+" just left the room");
+			outputData('exited', user);
 		});
 
 		socket.emit('createstory',{storyname:"a tid story"});
 
 		socket.on("createdstory",function(story){
-			console.log("A story with name + " + story.name);
+			outputData('createdstory', story);
 		});
