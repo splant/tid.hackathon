@@ -1,5 +1,5 @@
 var stories  = [];
-var room ={ people : [], stories: stories};
+var room ={ stories: stories};
 
 module.exports = {
 
@@ -7,6 +7,7 @@ module.exports = {
 
         function getRoomStatus() {
 
+            room.people = [];
 
             var clients = io.sockets.adapter.rooms["123"];
 
