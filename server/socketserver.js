@@ -6,13 +6,21 @@ module.exports = {
 
     create : function(io){
 
+        function userInfo(socket) {
+            return {
+                id: socket.id,
+                name: socket.name,
+                color: socket.color
+            }
+        }
+
         function getPeople() {
             var people = [];
             var clients = io.sockets.adapter.rooms["123"];
 
             for (var clientId in clients ) {
                 var socket = io.sockets.connected[clientId];//Do whatever you want with this
-                people.push({"name": socket.name, "color": socket.color});
+                people.push(userInfo(socket));
             }
             return people;
         }
@@ -31,6 +39,16 @@ module.exports = {
             currentRound = null;
         }
 
+        function hasStory(name) {
+            for (var i = 0; i < stories.length; i++) {
+                var story = stories[i];
+                if (story.name == name) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         io.on("connection", function(socket) {
 
             socket.join("123");
@@ -46,18 +64,26 @@ module.exports = {
 
                 // send room status to sender
                 socket.emit("roomstatus", getRoomStatus());
-                socket.broadcast.emit("joined", {name:socket.name,color:socket.color});
+                socket.broadcast.emit("joined", userInfo(socket));
                 console.log("Hello from "+data.name);
             });
 
             socket.on('disconnect', function() {
                 console.log(socket.name + " disconnected");
-                socket.broadcast.emit("exited",{name:socket.name,color:socket.color});
+                socket.broadcast.emit("exited",userInfo(socket));
             });
 
-            socket.on('createstory', function(data){
-                stories.push({name: data.name});
-                socket.broadcast.emit("createdstory",{name: data.name});
+            socket.on('createstory', function(data, error){
+
+                if (hasStory(data.name)) {
+                    console.log('Failed to create story (duplicate name)');
+                    error(true);
+                } else {
+                    console.log('Created story: '+data.name);
+                    stories.push({name: data.name});
+                    socket.broadcast.emit("createdstory",{name: data.name});
+                    error(false);
+                }
             });
 
             socket.on('startround', function(data) {
@@ -81,10 +107,7 @@ module.exports = {
                 if (currentRound) {
                     currentRound.votes[socket.name] = estimate;
 
-                    socket.broadcast.emit('voted', {
-                        name: socket.name,
-                        estimate: estimate
-                    });
+                    socket.broadcast.emit('voted', userInfo(socket));
 
                     if(everyoneVoted()) {
                         clearTimeout(currentRoundTimer);

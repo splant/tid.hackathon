@@ -46,7 +46,13 @@ block content
 			outputData('exited', user);
 		});
 
-		socket.emit('createstory',{storyname:"a tid story"});
+		socket.emit('createstory',{name:"a tid story"}, function(error) {
+			if (error) {
+				outputData('createstory - failed', {error: true});	
+			} else {
+				outputData('createstory - succeeded', {error: false});
+			}
+		});
 
 		socket.on("createdstory",function(story){
 			outputData('createdstory', story);
