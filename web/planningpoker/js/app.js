@@ -25,7 +25,6 @@ $(document).foundation();
     $scope.users = []
 
     var newUser = getRandomUser();
-    $scope.users.push(newUser);
     socket.emit("join", newUser);
 
     socket.on('roomstatus', function(room){
