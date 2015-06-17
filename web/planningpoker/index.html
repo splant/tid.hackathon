@@ -33,6 +33,12 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="small-12 columns" ng-controller="roundController">
+        <a class="button" ng-click="roundStartedClicked()">Start Round</a>
+      </div>
+    </div>
+
     <div class="row" ng-controller="usersController">
 
       <div ng-repeat="user in users" class="small-6 medium-3 large-2 columns" ng-class="{'end':$last}">
@@ -49,8 +55,9 @@
 
     </div>
 
-    <div voting-widget></div>
-
+    <div ng-controller="votingWidgetController">
+      <div on-button-clicked="onVote" voting-widget></div>
+    </div>
 
   </body>
 </html>
