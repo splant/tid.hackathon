@@ -11,7 +11,7 @@ $(document).foundation();
   var getRandomUser = function(){
     return {
       "name" : names[Math.floor(Math.random() * 5)],
-      "color" : colors[Math.floor(Math.random() * 8)],
+      "color" : colors[Math.floor(Math.random() * 5)],
     }
   }
 
