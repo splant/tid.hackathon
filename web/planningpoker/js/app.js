@@ -58,6 +58,7 @@ $(document).foundation();
   var votingWidgetController = app.controller("votingWidgetController", function($scope){
     $scope.onVote = function(number){
       alert("Congratulations!!! You voted for: " + number + "!?");
+      socket.emit("vote", { estimate : number });
     }
   })
 
@@ -75,5 +76,22 @@ $(document).foundation();
       templateUrl : "../templates/votingWidget.html"
     };
   })
+
+  var roundController = app.controller("roundController", function($scope){
+    $scope.roundStartedClicked = function(){
+      alert("Round started!");
+      socket.emit("startround", { name : "A story!" });
+
+    }
+
+    socket.on("endedround", function(roundResults){
+      alert("round ended: " + roundResults);
+		});
+        
+    socket.on("voted", function(voteResult){
+      alert("vote recieved: " + voteResult);
+		});
+  })
+
 
 })();
