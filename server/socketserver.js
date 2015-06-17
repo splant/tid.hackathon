@@ -29,7 +29,7 @@ module.exports = {
             return {
                 people : getPeople(),
                 stories: stories, 
-                currentRound: null 
+                currentRound: currentRound
             };
         };
 
