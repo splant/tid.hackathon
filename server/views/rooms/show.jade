@@ -2,7 +2,7 @@ extends ../layout
 
 block content
 	h1 Oh, hi there
-
+	button#start-round Start round
 	table
 		thead
 			tr
@@ -27,6 +27,10 @@ block content
 			document.getElementById("event-data").appendChild(row);
 		}
 
+		function startRound() {
+			socket.emit('startround', {name: "a tid story"});
+		}
+
 		socket = io.connect('http://localhost:3000');
 		socket.emit('join', {name: "Dan", colour: "blue"});
 		socket.on('roomstatus', function(room){outputData('roomstatus', room)});
@@ -42,3 +46,8 @@ block content
 		socket.on("createdstory",function(story){
 			outputData('createdstory', story);
 		});
+
+		socket.on('startedround', function(round){outputData('startedround', round)});
+		socket.on('endedround', function(round){outputData('endedround', round)});
+
+		document.getElementById('start-round').addEventListener('click', startRound);

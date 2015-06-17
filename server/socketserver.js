@@ -1,11 +1,16 @@
 var stories  = [];
+var currentRound = null;
 
 module.exports = {
 
     create : function(io){
 
         function getRoomStatus() {
-            var room ={ people : [] , stories: stories};
+            var room = {
+                people : [], 
+                stories: stories, 
+                currentRound: null 
+            };
 
             var clients = io.sockets.adapter.rooms["123"];
 
@@ -16,6 +21,12 @@ module.exports = {
 
             return room;
         };
+
+        function endRound() {
+            console.log('ending round');
+            io.sockets.emit('endedround', currentRound);
+            currentRound = null;
+        }
 
         io.on("connection", function(socket) {
 
@@ -42,9 +53,38 @@ module.exports = {
             });
 
             socket.on('createstory', function(data){
-                stories.push({name: data.storyname});
-                socket.broadcast.emit("createdstory",{name: data.storyname});
+                stories.push({name: data.name});
+                socket.broadcast.emit("createdstory",{name: data.name});
             });
+
+            socket.on('startround', function(data) {
+                var story = data.name;
+                var startTime = new Date();
+
+                currentRound = {
+                    story: story,
+                    startTime: startTime,
+                    votes: {}
+                };
+                console.log('Started round');
+                socket.broadcast.emit('startedround', currentRound);
+
+                setTimeout(endRound, 10000); 
+            });
+
+            socket.on('vote', function(data) {
+                var estimate = data.estimate;
+                console.log('Received vote from '+socket.name+': '+estimate);
+                if (currentRound) {
+                    currentRound.votes[socket.name] = estimate;
+                    
+                    socket.broadcast.emit('voted', {
+                        name: socket.name,
+                        estimate: estimate
+                    });
+                }
+            })
+
         });
     }
 }
