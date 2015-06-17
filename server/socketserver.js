@@ -16,7 +16,7 @@ module.exports = {
 
             for (var clientId in clients ) {
                 var socket = io.sockets.connected[clientId];//Do whatever you want with this
-                room.people.push({"name": socket.name, "colour": socket.colour});
+                room.people.push({"name": socket.name, "color": socket.color});
             }
 
             return room;
@@ -39,17 +39,17 @@ module.exports = {
 
                 // name our socket for future events
                 socket.name = data.name;
-                socket.colour = data.colour;
+                socket.color = data.color;
 
                 // send room status to sender
                 socket.emit("roomstatus", getRoomStatus());
-                socket.broadcast.emit("joined", {name:socket.name,colour:socket.colour});
+                socket.broadcast.emit("joined", {name:socket.name,color:socket.color});
                 console.log("Hello from "+data.name);
             });
 
             socket.on('disconnect', function() {
                 console.log(socket.name + " disconnected");
-                socket.broadcast.emit("exited",{name:socket.name,colour:socket.colour});
+                socket.broadcast.emit("exited",{name:socket.name,color:socket.color});
             });
 
             socket.on('createstory', function(data){

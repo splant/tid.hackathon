@@ -3,7 +3,7 @@ $(document).foundation();
 
 (function(){
 
-  var socket = io.connect('http://127.0.0.1:3000/');
+  var socket = io.connect('http://SI3VWUK1UMU002.pre-prod.skyscanner.local:3000/');
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
   var colors = ["red", "blue", "green", "orange", "purple"];
@@ -25,8 +25,22 @@ $(document).foundation();
     $scope.users = []
 
     var newUser = getRandomUser();
-    $scope.users.push(newUser);
     socket.emit("join", newUser);
+
+    socket.on('roomstatus', function(room){
+      for (i = 0; i < room.people.length; i++) {
+        $scope.users.push(room.people[i]);
+        $scope.$apply();
+      }
+      console.log(room)
+    });
+
+		socket.on('joined',function(user){
+			console.log("User "+user.name+" just joined the room with colour "+ user.color);
+			console.log(user.color);
+      $scope.users.push(user);
+      $scope.$apply();
+		});
 
   })
 
