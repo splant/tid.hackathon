@@ -115,8 +115,15 @@ $include-html-global-classes: $include-html-classes;
 // $jet         : #222222;
 // $black       : #000000;
 
+// Flat UI Colors
+$emerald: #2ecc71;
+$peter-river: #3498db;
+$amethyst: #9b59b6;
+$pumpkin: #d35400;
+$alizarin: #e74c3c;
+
 // We use these as default colors throughout
-// $primary-color: #008CBA;
+$primary-color: $peter-river;
 // $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
 // $success-color: #43AC6A;
