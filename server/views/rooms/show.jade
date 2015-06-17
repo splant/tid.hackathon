@@ -2,7 +2,8 @@ extends ../layout
 
 block content
 	h1 Oh, hi there
-
+	button#start-round Start round
+	button#vote Vote
 	table
 		thead
 			tr
@@ -27,8 +28,16 @@ block content
 			document.getElementById("event-data").appendChild(row);
 		}
 
+		function startRound() {
+			socket.emit('startround', {name: "a tid story"});
+		}
+
+		function vote() {
+			socket.emit('vote', {estimate: 5});
+		}
+
 		socket = io.connect('http://localhost:3000');
-		socket.emit('join', {name: "Dan", colour: "blue"});
+		socket.emit('join', {name: Math.random(), colour: "blue"});
 		socket.on('roomstatus', function(room){outputData('roomstatus', room)});
 		socket.on('joined',function(user){
 			outputData('joined', user);
@@ -42,3 +51,9 @@ block content
 		socket.on("createdstory",function(story){
 			outputData('createdstory', story);
 		});
+
+		socket.on('startedround', function(round){outputData('startedround', round)});
+		socket.on('endedround', function(round){outputData('endedround', round)});
+
+		document.getElementById('start-round').addEventListener('click', startRound);
+		document.getElementById('vote').addEventListener('click', vote);
