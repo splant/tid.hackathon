@@ -45,11 +45,17 @@ $(document).foundation();
     $scope.users.push(getRandomUser());
   })
 
-  var votingWidget = app.directive("voting-widget", function(){
+  var votingWidgetController = app.controller("votingWidgetController", function($scope){
+
+    $scope.onVote = function(number){
+
+    }
+  })
+
+  var votingWidget = app.directive("votingWidget", function(){
 
     return {
-      "template" : "<h1>Test</h1>"
-      // "templateUrl" : "../templates/votingWidget.html"
+      "templateUrl" : "../templates/votingWidget.html"
     };
   })
 
