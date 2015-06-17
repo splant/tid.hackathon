@@ -27,9 +27,17 @@
       </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
       <div class="small-12 columns">
         <a class="button">Story</a>
+      </div>
+    </div> -->
+
+    <div class="row">
+      <div class="small-12 columns">
+        <input name="story" ng-model="story" type="text">
+
+        <a ng-click="stories.addStory(story)" id="create" class="button">Create a story</a>
       </div>
     </div>
 
