@@ -29,7 +29,13 @@ block content
 		}
 
 		function startRound() {
-			socket.emit('startround', {name: "a tid story"});
+			socket.emit('startround', {name: "a tid story"}, function(error) {
+				if (error) {
+					outputData('startround - failed', {error: true});
+				} else {
+					outputData('startround - succeeded', {error: false});
+				}
+			});
 		}
 
 		function vote() {

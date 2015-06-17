@@ -86,26 +86,34 @@ module.exports = {
                 }
             });
 
-            socket.on('startround', function(data) {
-                var story = data.name;
-                var startTime = new Date();
+            socket.on('startround', function(data, error) {
+                if (currentRound != null) {
+                    console.log("Could not start round - Round in progress");
+                    error(true);
+                } else {
+                    console.log('Started round');
 
-                currentRound = {
-                    story: story,
-                    startTime: startTime,
-                    votes: {}
-                };
-                console.log('Started round');
-                socket.broadcast.emit('startedround', currentRound);
+                    var story = data.name;
+                    var startTime = new Date();
 
-                currentRoundTimer = setTimeout(endRound, 30000);
+                    currentRound = {
+                        story: story,
+                        startTime: startTime,
+                        votes: {}
+                    };
+                    
+                    socket.broadcast.emit('startedround', currentRound);
+
+                    currentRoundTimer = setTimeout(endRound, 30000);
+                    error(false);
+                }
             });
 
             socket.on('vote', function(data) {
                 var estimate = data.estimate;
                 console.log('Received vote from '+socket.name+': '+estimate);
                 if (currentRound) {
-                    currentRound.votes[socket.name] = estimate;
+                    currentRound.votes[socket.id] = estimate;
 
                     socket.broadcast.emit('voted', userInfo(socket));
 
