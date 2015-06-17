@@ -4,7 +4,7 @@ $(document).foundation();
 (function(){
 
   var names = ["Maria", "Dan", "Alex", "Simon", "John"];
-  var colors = ["Red", "Blue", "Green", "Orange", "Brown", "Pink", "Purple", "Yellow"];
+  var colors = ["red", "blue", "green", "orange", "purple"];
 
   var app = angular.module("planningPokerApp", [])
 
