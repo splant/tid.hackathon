@@ -72,7 +72,7 @@ module.exports = {
                 console.log('Started round');
                 socket.broadcast.emit('startedround', currentRound);
 
-                currentRoundTimer = setTimeout(endRound, 10000);
+                currentRoundTimer = setTimeout(endRound, 30000);
             });
 
             socket.on('vote', function(data) {
