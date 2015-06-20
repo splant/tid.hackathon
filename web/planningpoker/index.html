@@ -44,7 +44,8 @@
 
     <div class="row">
       <div class="small-12 columns" ng-controller="roundController">
-        <a class="button" ng-click="roundStartedClicked(story)">Start Round</a>
+        <a class="button" ng-click="roundStartedClicked(story)" ng-if="!isRoundActive()">Start Round</a>
+        <h2 ng-if="isRoundActive()" countdown-widget start="round.currentRound.startTime"></h2>
       </div>
     </div>
 
